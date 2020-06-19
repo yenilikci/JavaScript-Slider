@@ -28,7 +28,41 @@ var models = [
 
 ];
 
-let index  = 0; //obje indeksi
-document.querySelector('.card-img-top').setAttribute('src',models[index].image); //slayt araba resmi
-document.querySelector('.card-title').textContent = models[index].name; //slayt araba ismi
-document.querySelector('.card-link').setAttribute('href',models[index].link); //slayt araba link
+//index değerlerine göre ilgili değerleri html ögelerine set edecek fonksiyon
+let showSlide = (i)=>{
+
+    index = i;
+
+    //indeks sayısı 0 altına düşerse son slayta git
+    if(i < 0){
+        index = slaytSayisi - 1;
+    }if(i >= slaytSayisi) //indeks sayısı en son indeksten sonra 0. indekse gelsin 
+    {
+        index = 0;
+    }
+
+    document.querySelector('.card-img-top').setAttribute('src',models[index].image); //slayt araba resmi
+    document.querySelector('.card-title').textContent = models[index].name; //slayt araba ismi
+    document.querySelector('.card-link').setAttribute('href',models[index].link); //slayt araba link
+}
+
+let index  = 2; //obje indeksi
+let slaytSayisi = models.length;
+
+showSlide(index);
+
+//sola geçmek için
+document.querySelector('.fa-arrow-circle-left').addEventListener('click',()=>{
+    index--;
+    showSlide(index);
+    console.log(index);
+});
+
+//sağa geçmek için
+document.querySelector('.fa-arrow-circle-right').addEventListener('click',()=>{
+    index++;
+    showSlide(index);
+    console.log(index);
+});
+
+
