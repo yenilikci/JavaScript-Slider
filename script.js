@@ -28,6 +28,38 @@ var models = [
 
 ];
 
+let index  = 2; //obje indeksi
+let slaytSayisi = models.length; //slayt sayısına modeller dizisinin uzunluğu atandı
+let interval; //set,clear durumları atanacak
+let settings = { //ayar objem slayt geçişi için
+    duration : '2000',
+    random : false //true atanırsa rastgele indeksteki objeler gelir
+};
+
+//ayarlar için
+let init = (sgs) =>{
+    var prev;
+
+    //rastgele slayt , duration 2 saniye
+    interval = setInterval(()=>{
+        if(sgs.random){
+            //random indeks
+            do{
+                index =  Math.floor(Math.random() * slaytSayisi);
+            }while(index == prev) //yeni değer önceki değer ile aynı olana kadar
+            prev = index;
+        }else{
+            //artan indeks
+            if(slaytSayisi == index + 1){ //son slayta gelmişsek
+                index = -1;
+            }
+            showSlide(index);
+            index++;
+        }
+        showSlide(index)
+    },sgs.duration)
+}
+
 //index değerlerine göre ilgili değerleri html ögelerine set edecek fonksiyon
 let showSlide = (i)=>{
 
@@ -36,7 +68,7 @@ let showSlide = (i)=>{
     //indeks sayısı 0 altına düşerse son slayta git
     if(i < 0){
         index = slaytSayisi - 1;
-    }if(i >= slaytSayisi) //indeks sayısı en son indeksten sonra 0. indekse gelsin 
+    }if(i >= slaytSayisi) //indeks sayısı, son indeksten sonra 0. indekse gelsin 
     {
         index = 0;
     }
@@ -46,23 +78,32 @@ let showSlide = (i)=>{
     document.querySelector('.card-link').setAttribute('href',models[index].link); //slayt araba link
 }
 
-let index  = 2; //obje indeksi
-let slaytSayisi = models.length;
-
-showSlide(index);
+init(settings);
 
 //sola geçmek için
 document.querySelector('.fa-arrow-circle-left').addEventListener('click',()=>{
     index--;
     showSlide(index);
-    console.log(index);
 });
 
 //sağa geçmek için
 document.querySelector('.fa-arrow-circle-right').addEventListener('click',()=>{
     index++;
     showSlide(index);
-    console.log(index);
 });
+
+//sola ve sağa geçme ikonlarının üstüne mouse getirilirse (mouseenter) slayt akışı durur clearInterval(interval)
+document.querySelectorAll('.arrow').forEach((item)=>{
+    item.addEventListener('mouseenter',()=>{
+        clearInterval(interval);
+    })
+});
+
+//sola ve sağa geçme ikonlarından mouse çekilirse (mouseleave) slayt devam eder init(settings)
+document.querySelectorAll('.arrow').forEach((item)=>{
+    item.addEventListener('mouseleave',()=>{
+        init(settings);
+    })
+})
 
 
